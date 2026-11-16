@@ -33,7 +33,8 @@ while (true)
     Console.WriteLine("Yapmak istediğiniz işlemi seçiniz:");
     Console.WriteLine("1 - Para Çekme");
     Console.WriteLine("2 - Para Yatırma");
-    Console.WriteLine("3 - Çıkış");
+    Console.WriteLine("3 - Pin kodunu değiştir");
+    Console.WriteLine("0 - Çıkış");
 
     int secim = Convert.ToInt32(Console.ReadLine());
 
@@ -59,7 +60,36 @@ while (true)
             bakiye = bakiye + yatirilacakTutar;
             Console.WriteLine($"Para yatırma işlemi başarılı. Yeni bakiyeniz: {bakiye} TL");
             break;
-            case 3:
+        case 3:
+            Console.Write("Yeni pin kodunuzu giriniz: ");
+            int yeniPin = Convert.ToInt32(Console.ReadLine());
+            kontrolPin = yeniPin;
+            Console.WriteLine("Pin kodunuz başarıyla değiştirildi.");
+
+            for (int i = 1; i < 4; i++)
+            {
+                Console.Write("Pin Kodunuzu giriniz:");
+                int? pinKodu = Convert.ToInt32(Console.ReadLine());
+
+                if (pinKodu != kontrolPin)
+                {
+                    if (i == 3)
+                    {
+                        Console.WriteLine("3 Kez hatalı giriş yaptınız. Daha fazla deneme yapazmazsınız!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Hatalı pin kodu");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Giriş başarılı");
+                    break;
+                }
+            }
+            break;
+        case 0:
                 Console.WriteLine("Çıkış yapılıyor...");
                 return;
         default:
