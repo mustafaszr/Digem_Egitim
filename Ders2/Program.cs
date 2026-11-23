@@ -6,6 +6,7 @@ int kontrolPin = 1234;
 decimal bakiye = 1000;
 
 List<HesapEkstre> hesapEkstres = new List<HesapEkstre>();
+List<string> telefonSebekeleri = new List<string> { "1 ) Turkcell", "2 ) Vodafone", "3 ) Türk Telekom" };
 
 var auth = new Auhentication(kontrolPin);
 
@@ -42,6 +43,7 @@ while (true)
     Console.WriteLine("3 - Pin kodunu değiştir");
     Console.WriteLine("4 - Bakiye Sorgulama");
     Console.WriteLine("5 - Hesap Ekstresi");
+    Console.WriteLine("6 - Fatura Ödeme");
     Console.WriteLine("0 - Çıkış");
 
     int secim = Convert.ToInt32(Console.ReadLine());
@@ -58,7 +60,8 @@ while (true)
                 {
                     IslemTarihi = DateTime.Now,
                     YapilanIslem = "Para Çekme",
-                    Tutar = cekilecekTutar
+                    Tutar = cekilecekTutar,
+                    Bakiye = bakiye
                 };
                 hesapEkstres.Add(paraCekmeEkstre);
                 Console.WriteLine($"Para çekme işlemi başarılı. Kalan bakiyeniz: {bakiye} TL");
@@ -77,7 +80,8 @@ while (true)
             {
                 IslemTarihi = DateTime.Now,
                 YapilanIslem = "Para Yatırma",
-                Tutar = yatirilacakTutar
+                Tutar = yatirilacakTutar,
+                Bakiye = bakiye
             };
             hesapEkstres.Add(ekstre);
 
@@ -121,6 +125,26 @@ while (true)
                 Console.WriteLine($"İşlem Tarihi: {hesapEkstre.IslemTarihi}, İşlem Türü: {hesapEkstre.YapilanIslem}, Tutar: {hesapEkstre.Tutar}");
             }
             break;
+        case 6:
+            foreach (var sebeke in telefonSebekeleri)
+            {
+                Console.WriteLine(sebeke);
+            }
+            Console.Write("Ödeme yapmak istediğiniz telefon şebekesini seçiniz (1-3): ");
+            int secilenSebeke = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Ödemek istediğiniz tutarı giriniz:");
+            var tutar = Convert.ToDecimal(Console.ReadLine());
+            bakiye = bakiye - tutar;
+            var ekstreFatura = new HesapEkstre
+            {
+                IslemTarihi = DateTime.Now,
+                YapilanIslem = $"Fatura Ödeme - {telefonSebekeleri[secilenSebeke - 1]}",
+                Tutar = tutar,
+                Bakiye = bakiye
+            };
+            hesapEkstres.Add(ekstreFatura);
+            Console.WriteLine("Fatura ödemesi başarılı.");
+            break;
         case 0:
             Console.WriteLine("Çıkış yapılıyor...");
             return;
@@ -136,4 +160,5 @@ public class HesapEkstre
     public DateTime IslemTarihi { get; set; }
     public string YapilanIslem { get; set; } = default!;
     public decimal Tutar { get; set; }
+    public decimal Bakiye { get; set; }
 }
